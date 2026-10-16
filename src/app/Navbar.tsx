@@ -1,8 +1,11 @@
+"use client";
+import { authClient } from "../lib/auth-client";
 
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Navbar() {
+  const { data: session } = authClient.useSession();
   const today = new Date().toLocaleDateString("bn-BD", {
     weekday: "long",
     day: "numeric",
@@ -36,10 +39,10 @@ export default function Navbar() {
 
         <nav className="flex shrink-0 items-center gap-2 sm:gap-4">
           <Link
-            href="/signin"
+            href={session ? "/profile" : "/signin"}
             className="text-xs font-semibold text-[#1d2b22] hover:text-[#05893E] sm:text-sm"
           >
-            সাইন ইন
+            {session ? "আমার প্রোফাইল" : "সাইন ইন"}
           </Link>
 
           <Link
