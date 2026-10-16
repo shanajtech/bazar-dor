@@ -62,13 +62,13 @@ export default function ProfilePage() {
           </p>
         </div>
 
-        <div className="mb-5 flex items-center gap-4 rounded-2xl border border-[#e1eae3] bg-white px-6 py-5">
+        <div className="mb-5 flex flex-wrap items-center gap-4 rounded-2xl border border-[#e1eae3] bg-white px-6 py-5 sm:flex-nowrap">
           <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#e5f5e9] text-2xl font-bold text-[#05893E]">
             {new Intl.Segmenter("bn", { granularity: "grapheme" }).segment(session.user.name.trim())[Symbol.iterator]().next().value?.segment.toLocaleUpperCase() || "?"}
           </div>
 
           <div className="min-w-0 flex-1">
-            <h2 className="text-lg font-bold text-[#1d2b22]">
+            <h2 className="break-words text-lg font-bold text-[#1d2b22]">
               {session.user.name}
             </h2>
             <p className="mt-1 truncate text-sm text-[#7a877d]">
@@ -80,7 +80,7 @@ export default function ProfilePage() {
   type="button"
   onClick={signOut}
   disabled={busy}
-  className="flex shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#f0b7b7] px-4 py-2 text-sm font-semibold text-[#D03739] transition hover:bg-[#fff4f4]"
+  className="flex w-full shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#f0b7b7] px-4 py-2 text-sm font-semibold text-[#D03739] transition hover:bg-[#fff4f4] sm:w-auto"
 >
   <FiLogOut className="h-4 w-4" />
   সাইন আউট
