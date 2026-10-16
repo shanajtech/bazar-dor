@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import Link from "next/link";
+import { toast } from "react-hot-toast";
 import { authClient } from "../../lib/auth-client";
 import { socialLogin } from "../../lib/social-login";
 import { FcGoogle } from "react-icons/fc";
@@ -32,19 +33,6 @@ export default function ProfilePage() {
       if (error) { toast.error("সাইন আউট করা যায়নি"); return; }
       toast.success("সফলভাবে সাইন আউট হয়েছে");
       router.replace("/signin"); router.refresh();
-    } catch { toast.error("সংযোগে সমস্যা হয়েছে"); }
-    finally { setBusy(false); }
-  };
-  const updateName = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const name = String(new FormData(event.currentTarget).get("name") ?? "").trim();
-    if (busy) return;
-    if (!name) { toast.error("আপনার নাম লিখুন"); return; }
-    setBusy(true);
-    try {
-      const { error } = await authClient.updateUser({ name });
-      if (error) toast.error("আপডেট করা যায়নি");
-      else toast.success("তথ্য আপডেট হয়েছে");
     } catch { toast.error("সংযোগে সমস্যা হয়েছে"); }
     finally { setBusy(false); }
   };
@@ -92,7 +80,7 @@ export default function ProfilePage() {
             তথ্য
           </h3>
 
-          <form noValidate onSubmit={updateName} aria-busy={busy}>
+          <div>
             <label
               htmlFor="name"
               className="mb-2 block text-sm font-semibold text-[#1d2b22]"
@@ -106,18 +94,17 @@ export default function ProfilePage() {
               key={session.user.name}
               defaultValue={session.user.name}
               type="text"
-              required
+              readOnly
               className="mb-4 w-full rounded-lg border border-[#dce6df] bg-white px-4 py-3 text-sm text-[#1d2b22] outline-none focus:border-[#05893E]"
             />
 
-            <button
-              type="submit"
-              disabled={busy}
-              className="w-full rounded-lg bg-[#05893E] px-4 py-3 text-sm font-semibold text-white shadow-[0_3px_0_#b9d9c3] transition hover:bg-[#047232]"
+            <Link
+              href="/profile/update"
+              className="block w-full rounded-lg bg-[#05893E] text-center px-4 py-3 text-sm font-semibold text-white shadow-[0_3px_0_#b9d9c3] transition hover:bg-[#047232]"
             >
               আপডেট
-            </button>
-          </form>
+            </Link>
+          </div>
           <p className="mb-3 mt-7 text-sm text-[#7a877d]">একই ইমেইলের Google বা GitHub অ্যাকাউন্ট যুক্ত করুন। এরপর সেটি দিয়েও সাইন ইন করতে পারবেন।</p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <button type="button" disabled={busy} onClick={() => linkProvider("google")} className="flex items-center justify-center gap-2 rounded-lg border border-[#dce6df] px-3 py-3 text-xs font-semibold text-[#1d2b22] transition hover:bg-[#f6faf7] disabled:opacity-60">

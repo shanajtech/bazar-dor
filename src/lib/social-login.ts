@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { authClient } from "./auth-client";
 
 export async function socialLogin(provider: "google" | "github", link = false) {

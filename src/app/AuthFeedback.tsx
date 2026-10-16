@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { toast, Toaster } from "sonner";
+import { toast, Toaster } from "react-hot-toast";
 import { authClient } from "../lib/auth-client";
 
 export default function AuthFeedback() {
@@ -17,7 +17,7 @@ export default function AuthFeedback() {
     url.searchParams.delete("error_description");
     window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
     if (result === "required") {
-      toast.info("বিস্তারিত দেখতে আগে সাইন ইন করুন", { id: "sign-in-required" });
+      toast("বিস্তারিত দেখতে আগে সাইন ইন করুন", { id: "sign-in-required" });
     } else if (error === "account_not_linked") {
       toast.error("এই ইমেইলে আগে অ্যাকাউন্ট আছে। আগের পদ্ধতিতে সাইন ইন করে প্রোফাইল থেকে GitHub বা Google যুক্ত করুন।", { duration: 10000 });
     } else if (result === "error" || error) {
@@ -30,5 +30,5 @@ export default function AuthFeedback() {
       }).catch(() => { toast.error("সেশন যাচাই করা যায়নি"); });
     }
   }, [pathname]);
-  return <Toaster position="top-right" richColors />;
+  return <Toaster position="top-right" toastOptions={{ duration: 4000, style: { fontFamily: "inherit", borderRadius: "12px", maxWidth: "calc(100vw - 32px)" }, success: { iconTheme: { primary: "#05893E", secondary: "#fff" } }, error: { iconTheme: { primary: "#D03739", secondary: "#fff" } } }} />;
 }

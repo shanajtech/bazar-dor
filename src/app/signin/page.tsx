@@ -5,7 +5,7 @@ import Link from "next/link";
 import { socialLogin } from "../../lib/social-login";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { authClient } from "../../lib/auth-client";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { authClient } from "../../lib/auth-client";
 
 export default function SignUpPage() {
