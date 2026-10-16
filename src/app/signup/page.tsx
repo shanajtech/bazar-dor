@@ -2,11 +2,12 @@
 "use client";
 
 import Link from "next/link";
+import { socialLogin } from "../../lib/social-login";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import { authClient } from "../../lib/auth-client";
 
 export default function SignUpPage() {
@@ -37,6 +38,11 @@ export default function SignUpPage() {
       return;
     }
 
+    if (!e.currentTarget.checkValidity()) {
+      toast.error("সঠিক ইমেইল ও প্রয়োজনীয় তথ্য পূরণ করুন");
+      e.currentTarget.reportValidity();
+      return;
+    }
     setLoading(true);
 
     try {
@@ -60,13 +66,13 @@ export default function SignUpPage() {
     }
   };
 
-  const handleSocialLogin = () => {
-    toast.info("Google/GitHub লগইন এখনো সেটআপ করা হয়নি। ইমেইল ও পাসওয়ার্ড ব্যবহার করুন।");
+  const handleSocialLogin = async (provider: "google" | "github") => {
+    if (loading) return;
+    setLoading(true);
+    try { await socialLogin(provider); } finally { setLoading(false); }
   };
-
   return (
     <main className="min-h-[650px] bg-[#f0f6f1] px-4 pb-24 pt-12">
-      <Toaster position="top-right" richColors />
 
       <div className="mx-auto max-w-[440px]">
         <div className="mb-6 text-center">
@@ -79,7 +85,7 @@ export default function SignUpPage() {
         </div>
 
         <div className="rounded-2xl border border-[#e1eae3] bg-white p-6">
-          <form onSubmit={handleSignUp} className="space-y-5">
+          <form aria-busy={loading} noValidate onSubmit={handleSignUp} className="space-y-5">
             <div>
               <label
                 htmlFor="name"
@@ -176,7 +182,8 @@ export default function SignUpPage() {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <button
               type="button"
-              onClick={handleSocialLogin}
+              disabled={loading}
+              onClick={() => handleSocialLogin("google")}
               className="flex items-center justify-center gap-2 rounded-lg border border-[#dce6df] px-3 py-3 text-xs font-semibold text-[#1d2b22] transition hover:bg-[#f6faf7]"
             >
               <FcGoogle className="h-4 w-4 shrink-0" />
@@ -185,7 +192,8 @@ export default function SignUpPage() {
 
             <button
               type="button"
-              onClick={handleSocialLogin}
+              disabled={loading}
+              onClick={() => handleSocialLogin("github")}
               className="flex items-center justify-center gap-2 rounded-lg border border-[#dce6df] px-3 py-3 text-xs font-semibold text-[#1d2b22] transition hover:bg-[#f6faf7]"
             >
               <FaGithub className="h-4 w-4 shrink-0 text-[#24292F]" />

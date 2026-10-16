@@ -2,9 +2,10 @@
 
 
 import Link from "next/link";
+import { socialLogin } from "../../lib/social-login";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import { authClient } from "../../lib/auth-client";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
@@ -16,6 +17,11 @@ export default function SignInPage() {
     event.preventDefault();
     if (loading) return;
     const form = new FormData(event.currentTarget);
+    if (!event.currentTarget.checkValidity()) {
+      toast.error("সঠিক ইমেইল ও প্রয়োজনীয় তথ্য পূরণ করুন");
+      event.currentTarget.reportValidity();
+      return;
+    }
     setLoading(true);
     try {
       const { error } = await authClient.signIn.email({
@@ -23,15 +29,19 @@ export default function SignInPage() {
         password: String(form.get("password") ?? ""),
       });
       if (error) { toast.error(error.message || "সাইন ইন করা যায়নি"); return; }
-      router.push("/profile");
+      toast.success("সফলভাবে সাইন ইন হয়েছে");
+      router.push("/");
       router.refresh();
     } catch { toast.error("সংযোগে সমস্যা হয়েছে। আবার চেষ্টা করুন"); }
     finally { setLoading(false); }
   };
-  const socialUnavailable = () => toast.info("Google/GitHub লগইন এখনো সেটআপ করা হয়নি। ইমেইল ও পাসওয়ার্ড ব্যবহার করুন।");
+  const handleSocialLogin = async (provider: "google" | "github") => {
+    if (loading) return;
+    setLoading(true);
+    try { await socialLogin(provider); } finally { setLoading(false); }
+  };
   return (
     <main className="min-h-[650px] bg-[#f0f6f1] px-4 pb-24 pt-12">
-      <Toaster position="top-right" richColors />
       <div className="mx-auto max-w-[440px]">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-[#1d2b22]">
@@ -43,7 +53,7 @@ export default function SignInPage() {
         </div>
 
         <div className="rounded-2xl border border-[#e1eae3] bg-white p-6">
-          <form onSubmit={handleSignIn} className="space-y-5">
+          <form aria-busy={loading} noValidate onSubmit={handleSignIn} className="space-y-5">
             <div>
               <label
                 htmlFor="email"
@@ -83,7 +93,7 @@ export default function SignInPage() {
               disabled={loading}
               className="w-full rounded-lg bg-[#05893E] px-4 py-3 text-sm font-semibold text-white shadow-[0_3px_0_#b9d9c3] transition hover:bg-[#047232]"
             >
-              সাইন ইন
+              {loading ? "অপেক্ষা করুন..." : "সাইন ইন"}
             </button>
           </form>
 
@@ -96,7 +106,8 @@ export default function SignInPage() {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <button
               type="button"
-              onClick={socialUnavailable}
+              disabled={loading}
+              onClick={() => handleSocialLogin("google")}
               className="flex items-center justify-center gap-2 rounded-lg border border-[#dce6df] px-3 py-3 text-xs font-semibold text-[#1d2b22] transition hover:bg-[#f6faf7]"
             >
               <FcGoogle className="h-4 w-4 shrink-0" />
@@ -105,7 +116,8 @@ export default function SignInPage() {
 
             <button
               type="button"
-              onClick={socialUnavailable}
+              disabled={loading}
+              onClick={() => handleSocialLogin("github")}
               className="flex items-center justify-center gap-2 rounded-lg border border-[#dce6df] px-3 py-3 text-xs font-semibold text-[#1d2b22] transition hover:bg-[#f6faf7]"
             >
               <FaGithub className="h-4 w-4 shrink-0 text-[#24292F]" />

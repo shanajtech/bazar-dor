@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { Hind_Siliguri } from "next/font/google";
 import Navbar from "./Navbar";
+import AuthFeedback from "./AuthFeedback";
 import CategoryNav from "./CategoryNav";
 import PriceTicker from "./PriceTicker";
 import Footer from "./Footer";
@@ -29,6 +30,7 @@ export default function RootLayout({
       <body
         className={`${hindSiliguri.className} min-h-screen bg-[#f8faf8] text-[#1d2b22] antialiased`}
       >
+        <AuthFeedback />
         <Navbar />
         <CategoryNav />
         <PriceTicker />
