@@ -29,7 +29,7 @@ export default function CategoryNav() {
 
   return (
     <nav className="border-b border-[#e7ebe7] bg-white">
-      <div className="mx-auto flex max-w-7xl items-center gap-2 overflow-x-auto px-4 py-3 sm:px-6 lg:justify-center lg:px-8">
+      <div className="mx-auto flex max-w-6xl items-center gap-2 overflow-x-auto px-4 py-3 sm:px-6 lg:justify-center lg:px-8">
         <Link
           href="/"
           className={`shrink-0 rounded-lg px-4 py-2 text-sm font-semibold transition ${

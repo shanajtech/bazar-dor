@@ -87,7 +87,7 @@ export default function CategoryProducts({
 
   return (
     <main className="min-h-screen bg-[#f8faf8]">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col gap-5 rounded-xl border border-[#e5eae5] bg-white p-5 sm:flex-row sm:items-center sm:justify-between sm:p-7">
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#f1f7f2] text-3xl">
@@ -137,20 +137,22 @@ export default function CategoryProducts({
                 href={`/product/${product.slug}`}
                 className="group flex h-full flex-col rounded-xl border border-[#e5eae5] bg-white p-4 transition hover:border-[#c9dfce] hover:shadow-sm"
               >
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-[#f1f7f2] text-3xl">
+                <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#f1f7f2] text-2xl">
                   {product.image}
                 </div>
 
-                <h2 className="text-base font-bold text-[#1d2b22] transition group-hover:text-[#05893E]">
+                <div><h2 className="text-base font-bold text-[#1d2b22] transition group-hover:text-[#05893E]">
                   {product.nameBn}
                 </h2>
 
                 <p className="mt-1 text-xs text-[#7a857c]">
                   প্রতি {unitName(product.unit)}
                 </p>
+                </div></div>
 
-                <div className="mt-auto pt-4">
-                  <div className="border-t border-[#edf0ed] pt-3">
+                <div className="mt-auto pt-3">
+                  <div>
                     <p className="mb-1 text-xs text-[#7a857c]">
                       আজকের দাম
                     </p>
@@ -170,7 +172,7 @@ export default function CategoryProducts({
                         }`}
                       >
                         {isUp ? "▲" : isDown ? "▼" : "—"}{" "}
-                        {bangla(product.change.pct)}%
+                        {Math.abs(product.change.pct).toLocaleString("bn-BD", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%
                       </span>
                     </div>
                   </div>

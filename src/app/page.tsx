@@ -19,6 +19,8 @@ interface Product {
   };
 }
 
+export const dynamic = "force-dynamic";
+
 const API_URL =
   "https://openapi.programming-hero.com/api/bazardor/products";
 
@@ -49,20 +51,22 @@ function ProductCard({ product }: { product: Product }) {
       href={`/product/${product.slug}`}
       className="group flex h-full flex-col rounded-xl border border-[#e5eae5] bg-white p-4 transition hover:border-[#c9dfce] hover:shadow-sm"
     >
-      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-[#f1f7f2] text-3xl">
+      <div className="flex items-center gap-3">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#f1f7f2] text-2xl">
         {product.image}
       </div>
 
-      <h3 className="text-base font-bold text-[#1d2b22] transition group-hover:text-[#05893E]">
+      <div><h3 className="text-base font-bold text-[#1d2b22] transition group-hover:text-[#05893E]">
         {product.nameBn}
       </h3>
 
       <p className="mt-1 text-xs text-[#7a857c]">
         প্রতি {getUnit(product.unit)}
       </p>
+      </div></div>
 
-      <div className="mt-auto pt-4">
-        <div className="border-t border-[#edf0ed] pt-3">
+      <div className="mt-auto pt-3">
+        <div>
           <p className="mb-1 text-xs text-[#7a857c]">
             আজকের দাম
           </p>
@@ -82,7 +86,7 @@ function ProductCard({ product }: { product: Product }) {
               }`}
             >
               {isUp ? "▲" : isDown ? "▼" : "—"}{" "}
-              {formatBangla(product.change.pct)}%
+              {Math.abs(product.change.pct).toLocaleString("bn-BD", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%
             </span>
           </div>
         </div>
@@ -109,7 +113,7 @@ function ProductSection({
   return (
     <section
       id={id}
-      className="mx-auto max-w-7xl scroll-mt-8 px-4 pb-12 sm:px-6 lg:px-8"
+      className="mx-auto max-w-6xl scroll-mt-8 px-4 pb-12 sm:px-6 lg:px-8"
     >
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-[#1d2b22] sm:text-[28px]">
@@ -168,12 +172,12 @@ export default async function Home() {
 
   const topRisers = products
     .filter((product) => product.change.dir === "up")
-    .sort((a, b) => b.change.pct - a.change.pct)
+    .sort((a, b) => Math.abs(b.change.pct) - Math.abs(a.change.pct))
     .slice(0, 6);
 
   const topFallers = products
     .filter((product) => product.change.dir === "down")
-    .sort((a, b) => b.change.pct - a.change.pct)
+    .sort((a, b) => Math.abs(b.change.pct) - Math.abs(a.change.pct))
     .slice(0, 6);
 
   const today = new Date().toLocaleDateString("bn-BD", {
@@ -186,9 +190,9 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-[#f8faf8]">
-      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+      <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
         <div className="overflow-hidden rounded-2xl border border-[#e1eae3] bg-white">
-          <div className="grid items-center gap-8 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8 lg:py-16 lg:pr-6 lg:pl-14">
+          <div className="grid items-center gap-8 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8 lg:py-10 lg:pr-6 lg:pl-14">
             <div className="text-center lg:text-left">
               <p className="mb-4 inline-flex items-center rounded-full bg-[#edf8f0] px-4 py-2 text-xs font-semibold text-[#05893E] sm:text-sm">
                 {today}
@@ -218,7 +222,7 @@ export default async function Home() {
                 width={600}
                 height={500}
                 priority
-                className="h-auto w-full max-w-[520px] object-contain"
+                className="h-auto w-full max-w-[320px] object-contain"
               />
             </div>
           </div>

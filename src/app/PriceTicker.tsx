@@ -50,7 +50,7 @@ export default function PriceTicker() {
 
             <span className="text-[#45564a]">
               {product.today.toLocaleString("bn-BD")} টাকা/
-              {product.unit === "kg" ? "কেজি" : product.unit}
+              {({ kg: "কেজি", litre: "লিটার", liter: "লিটার", l: "লিটার", dozen: "ডজন", piece: "পিস", pc: "পিস", pcs: "পিস", hali: "হালি" } as Record<string, string>)[product.unit] ?? product.unit}
             </span>
 
             <span
@@ -67,7 +67,7 @@ export default function PriceTicker() {
                 : product.change.dir === "down"
                   ? "▼"
                   : "—"}{" "}
-              {product.change.pct.toLocaleString("bn-BD")}%
+              {Math.abs(product.change.pct).toLocaleString("bn-BD", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%
             </span>
           </div>
         ))}
