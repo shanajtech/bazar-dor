@@ -1,5 +1,6 @@
 
 import CategoryProducts from "./CategoryProducts";
+import { notFound } from "next/navigation";
 
 interface Category {
   id: string;
@@ -59,6 +60,8 @@ export default async function CategoryPage({
   } catch (error) {
     console.error("Category loading error:", error);
   }
+
+  if (!category?.slug) notFound();
 
   return (
     <CategoryProducts

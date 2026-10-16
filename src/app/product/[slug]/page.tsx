@@ -1,6 +1,10 @@
 
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { headers } from "next/headers";
+import { auth } from "../../../lib/auth";
+
+export const dynamic = "force-dynamic";
 
 interface Market {
   market: string;
@@ -77,6 +81,9 @@ export default async function ProductDetails({
     notFound();
   }
 
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect("/signin?auth=required");
+
   const markets = product.markets ?? [];
 
   const minimum =
@@ -102,7 +109,7 @@ export default async function ProductDetails({
 
   return (
     <main className="min-h-screen bg-[#f8faf8]">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         <nav className="mb-6 text-sm text-[#657369]">
           <Link href="/" className="hover:text-[#05893E]">
             হোম
@@ -155,7 +162,7 @@ export default async function ProductDetails({
                 }`}
               >
                 {isUp ? "▲" : isDown ? "▼" : "—"}{" "}
-                {bangla(product.change.pct)}%
+                {Math.abs(product.change.pct).toLocaleString("bn-BD", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%
               </span>
             </div>
           </div>
